@@ -27,14 +27,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
     public Adapter() {
         InitSortedList();
     }
-
-
     private void InitSortedList() {
         this.sortedList = new SortedList<Task>(Task.class, new SortedList.Callback<Task>() {
             @Override
             public int compare(Task o1, Task o2) {
+                System.out.println("!!!");
+                if (o2.isDone || o1.isDone) {
+                    System.out.println("done");
+                }
                 if (!o2.isDone && o1.isDone) {
-                    return 1;
+                        return 1;
                 }
                 if (o2.isDone && !o1.isDone) {
                     return -1;
@@ -127,6 +129,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
                 public void onCheckedChanged(CompoundButton buttonView, boolean checked) {
                     if (!silentUpdate) {
                         task.isDone = checked;
+                        App.getInstance().getTaskDao().update(task);
                     }
                     updateStrokeOut();
                 }

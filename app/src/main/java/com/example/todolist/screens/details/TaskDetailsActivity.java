@@ -1,11 +1,18 @@
 package com.example.todolist.screens.details;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +45,37 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
         InitToolbar();
         InitTask();
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        showKeyboard(editText);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                String s = editText.getText().toString().trim();
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    hideKeyboard(editText);
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+    }
+    private void showKeyboard(EditText editText) {
+        InputMethodManager manager = (InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE
+        );
+        manager.showSoftInput(editText.getRootView(), InputMethodManager.SHOW_IMPLICIT);
+        editText.requestFocus();
+    }
+
+    private void hideKeyboard(EditText editText) {
+        InputMethodManager manager = (InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE
+        );
+        manager.hideSoftInputFromWindow(editText.getApplicationWindowToken(), 0);
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,11 +122,11 @@ public class TaskDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
     private void InitTask() {
+        editText = findViewById(R.id.editText);
         if (isOpeningForCreatingNewTask()) {
             task = new Task();
             return;
         }
-        editText = findViewById(R.id.editText);
         task = getIntent().getParcelableExtra(KEY);
         editText.setText(task.text);
     }

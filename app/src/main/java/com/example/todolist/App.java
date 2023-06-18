@@ -36,9 +36,6 @@ public class App extends Application {
         return instance;
     }
 
-    public AddDatabase getDataBase() {
-        return dataBase;
-    }
 
     public TaskDao getTaskDao() {
         return taskDao;
