@@ -9,7 +9,7 @@
     android:gravity="center">
 
     <TextView
-        android:id="@+id/note_text"
+        android:id="@+id/task_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -18,13 +18,14 @@
         android:text="Hello, world!"/>
 
     <CheckBox
-        android:id="@+id/completed"
+        android:id="@+id/isCompleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/completed"
+        android:text="@string/isCompleted"
         android:layout_marginLeft="8dp"/>
 
     <ImageView
+        android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"

@@ -22,7 +22,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
     private Task task;
     private EditText editText;
 
-    private static void Start(Activity caller, Task task) {
+    public static void start(Activity caller, Task task) {
         Intent intent = new Intent(caller, TaskDetailsActivity.class);
         if (task != null) {
             intent.putExtra(KEY, task);

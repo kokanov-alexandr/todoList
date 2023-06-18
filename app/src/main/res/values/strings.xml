@@ -11,5 +11,5 @@
     <string name="new_note_text">Введите текст заметки</string>
     <string name="task_details_title">Заметка</string>
     <string name="save">Сохранить</string>
-    <string name="completed">Выполнение</string>
+    <string name="isCompleted">Выполнение</string>
 </resources>
