@@ -24,6 +24,10 @@ public class Task implements Parcelable {
     @ColumnInfo(name = "isDone")
     public boolean isDone;
 
+    @ColumnInfo(name = "isImportant")
+    public boolean isImportant;
+
+
     public Task() {
 
     }
@@ -33,6 +37,7 @@ public class Task implements Parcelable {
         text = in.readString();
         creationTime = in.readLong();
         isDone = in.readByte() != 0;
+        isImportant = in.readByte() != 0;
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -51,8 +56,8 @@ public class Task implements Parcelable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Task note = (Task) o;
-        return id == note.id && creationTime == note.creationTime && isDone == note.isDone && Objects.equals(text, note.text);
+        Task task = (Task) o;
+        return id == task.id && creationTime == task.creationTime && isDone == task.isDone && isImportant == task.isImportant && Objects.equals(text, task.text);
     }
 
     @Override
@@ -72,5 +77,6 @@ public class Task implements Parcelable {
         dest.writeString(text);
         dest.writeLong(creationTime);
         dest.writeByte((byte) (isDone ? 1 : 0));
+        dest.writeByte((byte) (isImportant ? 1 : 0));
     }
 }

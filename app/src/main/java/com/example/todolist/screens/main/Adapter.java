@@ -31,9 +31,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
         this.sortedList = new SortedList<Task>(Task.class, new SortedList.Callback<Task>() {
             @Override
             public int compare(Task o1, Task o2) {
-                System.out.println("!!!");
-                if (o2.isDone || o1.isDone) {
-                    System.out.println("done");
+                if (!o2.isImportant && o1.isImportant){
+                    return -1;
+                }
+                if (o2.isImportant && !o1.isImportant){
+                    return 1;
                 }
                 if (!o2.isDone && o1.isDone) {
                         return 1;
@@ -84,7 +86,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        holder.bindTask(sortedList.get(position));
+        holder.bindIsDone(sortedList.get(position));
+        holder.bindIsImportant(sortedList.get(position));
     }
 
     @Override
@@ -98,8 +101,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView taskText;
-        CheckBox  isCompleted;
+        CheckBox isCompleted;
         View delete;
+        CheckBox isImportant;
 
         Task task;
         boolean silentUpdate;
@@ -109,7 +113,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
             taskText = itemView.findViewById(R.id.task_text);
             isCompleted = itemView.findViewById(R.id.isCompleted);
             delete = itemView.findViewById(R.id.delete);
-
+            isImportant = itemView.findViewById(R.id.isImportant);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -134,14 +138,30 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
                     updateStrokeOut();
                 }
             });
+
+            isImportant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean choose) {
+                    if(!silentUpdate){
+                        task.isImportant = choose;
+                        App.getInstance().getTaskDao().update(task);
+                    }
+                }
+            });
         }
 
-        public void bindTask(Task task) {
+        public void bindIsDone(Task task) {
             this.task = task;
             taskText.setText(task.text);
             updateStrokeOut();
             silentUpdate = true;
             isCompleted.setChecked(task.isDone);
+            silentUpdate = false;
+        }
+        public void bindIsImportant(Task task) {
+            this.task = task;
+            silentUpdate = true;
+            isImportant.setChecked(task.isImportant);
             silentUpdate = false;
         }
 

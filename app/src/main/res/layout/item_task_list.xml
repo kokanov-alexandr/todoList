@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:gravity="center">
@@ -15,20 +16,42 @@
         android:layout_weight="1"
         android:minHeight="64dp"
         android:gravity="center_vertical"
-        android:text="Hello, world!"/>
+        android:text="Hello, world!"
+        android:layout_centerInParent="true"
+        tools:ignore="MissingConstraints"/>
 
     <CheckBox
         android:id="@+id/isCompleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/isCompleted"
-        android:layout_marginLeft="8dp"/>
+        android:layout_centerInParent="true"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/delete"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/isImportant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:button="@android:drawable/star_big_off"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:layout_centerInParent="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:src="@android:drawable/ic_notification_clear_all"/>
+        android:layout_centerInParent="true"
+        android:layout_marginTop="16dp"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
+        android:src="@android:drawable/ic_delete"
+        app:layout_constraintEnd_toStartOf="@+id/isImportant"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
