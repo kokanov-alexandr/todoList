@@ -1,10 +1,11 @@
 package com.example.todolist.data;
 
 import androidx.room.Database;
+import androidx.room.RoomDatabase;
 
-import com.example.todolist.models.Note;
+import com.example.todolist.models.Task;
 
-@Database(entities = {Note.class}, version = 1)
-public abstract class AddDatabase {
-    public abstract NoteDao nodeDao();
+@Database(entities = {Task.class}, version = 1)
+public abstract class AddDatabase extends RoomDatabase {
+    public abstract TaskDao nodeDao();
 }

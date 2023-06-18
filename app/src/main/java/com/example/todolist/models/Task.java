@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey;
 import java.util.Objects;
 
 @Entity
-public class Note implements Parcelable {
+public class Task implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
@@ -24,7 +24,7 @@ public class Note implements Parcelable {
     @ColumnInfo(name = "isDone")
     public boolean isDone;
 
-    public Note() {
+    public Task() {
 
     }
 
@@ -32,7 +32,7 @@ public class Note implements Parcelable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Note note = (Note) o;
+        Task note = (Task) o;
         return id == note.id && creationTime == note.creationTime && isDone == note.isDone && Objects.equals(text, note.text);
     }
 

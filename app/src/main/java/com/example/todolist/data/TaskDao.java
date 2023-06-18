@@ -8,27 +8,27 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.todolist.models.Note;
+import com.example.todolist.models.Task;
 
 import java.util.List;
 
 @Dao
-public interface NoteDao {
-    @Query("SELECT * FROM Note")
-    List<Note> getAllList();
+public interface TaskDao {
+    @Query("SELECT * FROM Task")
+    List<Task> getAllList();
 
-    @Query("SELECT * FROM Note")
-    LiveData<List<Note>> getAllLiveData();
+    @Query("SELECT * FROM Task")
+    LiveData<List<Task>> getAllLiveData();
 
-    @Query("SELECT * FROM Note WHERE id = :id")
-    Note findById(int id);
+    @Query("SELECT * FROM Task WHERE id = :id")
+    Task findById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Note note);
+    void insert(Task task);
 
     @Update
-    void Update(Note note);
+    void update(Task task);
 
     @Delete
-    void delete(Note user);
+    void delete(Task task);
 }
