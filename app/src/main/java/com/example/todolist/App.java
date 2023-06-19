@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.room.Room;
 
 import com.example.todolist.data.AddDatabase;
+import com.example.todolist.data.SubTaskDao;
 import com.example.todolist.data.TaskDao;
 
 public class App extends Application {
@@ -12,6 +13,7 @@ public class App extends Application {
     private AddDatabase dataBase;
 
     private TaskDao taskDao;
+    private SubTaskDao subTaskDao;
     public static App instance;
 
 
@@ -29,7 +31,8 @@ public class App extends Application {
     private void InitDatabase() {
         dataBase = Room.databaseBuilder(getApplicationContext(),AddDatabase.class, "db-name").
                 allowMainThreadQueries().build();
-        taskDao = dataBase.nodeDao();
+        taskDao = dataBase.taskDao();
+        subTaskDao = dataBase.subTaskDao();
     }
 
     public static App getInstance() {
