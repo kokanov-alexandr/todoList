@@ -1,4 +1,4 @@
-package com.example.todolist.screens.main;
+package com.example.todolist.presentation.main;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;

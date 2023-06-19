@@ -15,10 +15,10 @@ import java.util.List;
 @Dao
 public interface SubTaskDao {
     @Query("SELECT * FROM SubTask")
-    LiveData<List<SubTask>> getAllLiveDataTask();
+    LiveData<List<SubTask>> getAll();
 
-    @Query("SELECT * FROM subTask WHERE id = :id")
-    SubTask findById(int id);
+    @Query("SELECT * FROM task WHERE id = :id")
+    SubTask findByIdTask(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(SubTask subTask);

@@ -1,4 +1,4 @@
-package com.example.todolist.screens.main;
+package com.example.todolist.presentation.main;
 
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.todolist.R;
 import com.example.todolist.databinding.ActivityMainBinding;
 import com.example.todolist.models.Task;
-import com.example.todolist.screens.details.TaskDetailsActivity;
+import com.example.todolist.presentation.details.TaskDetailsActivity;
 
 import java.util.List;
 
