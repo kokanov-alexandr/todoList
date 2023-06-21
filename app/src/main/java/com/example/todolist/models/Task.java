@@ -17,9 +17,14 @@ public class Task implements Parcelable {
 
     @ColumnInfo(name = "text")
     public String text;
-
     @ColumnInfo(name = "creationTime")
     public long creationTime;
+
+    @ColumnInfo(name = "isDone")
+    public boolean isCompleted;
+
+    @ColumnInfo(name = "isImportant")
+    public boolean isImportant;
 
     public Task() {}
 
@@ -27,6 +32,8 @@ public class Task implements Parcelable {
         id = in.readInt();
         text = in.readString();
         creationTime = in.readLong();
+        isCompleted = in.readByte() != 0;
+        isImportant = in.readByte() != 0;
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -34,7 +41,6 @@ public class Task implements Parcelable {
         public Task createFromParcel(Parcel in) {
             return new Task(in);
         }
-
         @Override
         public Task[] newArray(int size) {
             return new Task[size];
@@ -44,16 +50,15 @@ public class Task implements Parcelable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Task)) return false;
-        Task listTask = (Task) o;
-        return id == listTask.id && creationTime == listTask.creationTime && Objects.equals(text, listTask.text);
+        if (o == null || getClass() != o.getClass()) return false;
+        Task subTask = (Task) o;
+        return id == subTask.id && creationTime == subTask.creationTime && isCompleted == subTask.isCompleted && isImportant == subTask.isImportant && Objects.equals(text, subTask.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, creationTime);
+        return Objects.hash(id, text, creationTime, isCompleted, isImportant);
     }
-
     @Override
     public int describeContents() {
         return 0;
@@ -64,5 +69,7 @@ public class Task implements Parcelable {
         parcel.writeInt(id);
         parcel.writeString(text);
         parcel.writeLong(creationTime);
+        parcel.writeByte((byte) (isCompleted ? 1 : 0));
+        parcel.writeByte((byte) (isImportant ? 1 : 0));
     }
 }

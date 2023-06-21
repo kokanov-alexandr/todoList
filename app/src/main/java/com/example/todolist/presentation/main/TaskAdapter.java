@@ -1,9 +1,12 @@
 package com.example.todolist.presentation.main;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,9 +30,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ListTaskViewHo
         sortedList = new SortedList<>(Task.class, new SortedList.Callback<Task>() {
             @Override
             public int compare(Task o1, Task o2) {
+                if (!o2.isImportant && o1.isImportant){
+                    return -1;
+                }
+                if (o2.isImportant && !o1.isImportant){
+                    return 1;
+                }
+                if (!o2.isCompleted && o1.isCompleted) {
+                    return 1;
+                }
+                if (o2.isCompleted && !o1.isCompleted) {
+                    return -1;
+                }
                 return (int) (o2.creationTime - o1.creationTime);
             }
-
             @Override
             public void onChanged(int position, int count) {
                 notifyItemRangeChanged(position, count);
@@ -67,6 +81,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ListTaskViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ListTaskViewHolder holder, int position) {
+        holder.bindDone(sortedList.get(position));
+        holder.bindImportant(sortedList.get(position));
         holder.bind(sortedList.get(position));
     }
 
@@ -80,35 +96,89 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ListTaskViewHo
     }
 
     static class ListTaskViewHolder extends RecyclerView.ViewHolder {
-        TextView titleList;
+        TextView taskText;
         View delete;
+        Task task;
 
-        Task listTask;
+        CheckBox isCompleted;
+        CheckBox isImportant;
+        boolean middleUpdate;
 
         public ListTaskViewHolder(@NonNull final View itemView) {
             super(itemView);
 
-            titleList = itemView.findViewById(R.id.taskText);
+            taskText = itemView.findViewById(R.id.taskText);
 
             delete = itemView.findViewById(R.id.taskDelete);
+
+            isCompleted = itemView.findViewById(R.id.taskIsCompleted);
+            isImportant = itemView.findViewById(R.id.taskIsImportant);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    TaskDetailsActivity.start((Activity) itemView.getContext(), listTask);
+                    TaskDetailsActivity.start((Activity) itemView.getContext(), task);
                 }
             });
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    App.getInstance().getTaskDao().delete(listTask);
+                    App.getInstance().getTaskDao().delete(task);
                 }
             });
+
+            isImportant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean choose) {
+                    if (!middleUpdate) {
+                        task.isImportant = choose;
+                        App.getInstance().getTaskDao().update(task);
+                    }
+                }
+            });
+
+            isCompleted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                    if (!middleUpdate) {
+                        task.isCompleted = checked;
+                        App.getInstance().getTaskDao().update(task);
+                    }
+                    crossOutTask();
+                }
+            });
+
         }
+        private void crossOutTask(){
+            if(task.isCompleted){
+                taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                taskText.setPaintFlags(taskText.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+
+            }
+        }
+
         public void bind(Task listTask) {
-            this.listTask = listTask;
-            titleList.setText(listTask.text);
+            this.task = listTask;
+            taskText.setText(listTask.text);
+        }
+
+        public void bindDone(Task task) {
+            this.task = task;
+            taskText.setText(task.text);
+            crossOutTask();
+            middleUpdate = true;
+            isCompleted.setChecked(task.isCompleted);
+            middleUpdate = false;
+        }
+
+        public void bindImportant(Task task) {
+            this.task = task;
+            middleUpdate = true;
+            isImportant.setChecked(task.isImportant);
+            middleUpdate = false;
+
         }
     }
 

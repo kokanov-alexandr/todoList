@@ -33,10 +33,10 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.TaskView
                 if (o2.isImportant && !o1.isImportant){
                     return 1;
                 }
-                if (!o2.isDone && o1.isDone) {
+                if (!o2.isCompleted && o1.isCompleted) {
                     return 1;
                 }
-                if (o2.isDone && !o1.isDone) {
+                if (o2.isCompleted && !o1.isCompleted) {
                     return -1;
                 }
                 return (int) (o2.creationTime - o1.creationTime);
@@ -98,9 +98,9 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.TaskView
     static class TaskViewHolder extends RecyclerView.ViewHolder {
 
         TextView taskText;
-        CheckBox done;
+        CheckBox isCompleted;
         View delete;
-        CheckBox important;
+        CheckBox isImportant;
         SubTask subTask;
         boolean middleUpdate;
 
@@ -108,9 +108,9 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.TaskView
             super(itemView);
 
             taskText = itemView.findViewById(R.id.subTaskText);
-            done = itemView.findViewById(R.id.subTaskIsCompleted);
+            isCompleted = itemView.findViewById(R.id.subTaskIsCompleted);
             delete = itemView.findViewById(R.id.subTaskdelete);
-            important = itemView.findViewById(R.id.subTaskIsImportant);
+            isImportant = itemView.findViewById(R.id.subTaskIsImportant);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,7 +126,7 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.TaskView
                 }
             });
 
-            important.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            isImportant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean choose) {
                     if(!middleUpdate){
@@ -136,11 +136,11 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.TaskView
                 }
             });
 
-            done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            isCompleted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                     if (!middleUpdate) {
-                        subTask.isDone = checked;
+                        subTask.isCompleted = checked;
                         App.getInstance().getSubTaskDao().update(subTask);
                     }
                     crossOutTask();
@@ -153,26 +153,23 @@ public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.TaskView
             taskText.setText(subTask.text);
             crossOutTask();
             middleUpdate = true;
-            done.setChecked(subTask.isDone);
+            isCompleted.setChecked(subTask.isCompleted);
             middleUpdate = false;
         }
 
         private void crossOutTask(){
-            if(subTask.isDone){
+            if (subTask.isCompleted) {
                 taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            } else {
+            }
+            else {
                 taskText.setPaintFlags(taskText.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
-
             }
         }
         public void bindImportant(SubTask subTask) {
             this.subTask = subTask;
-
-
             middleUpdate = true;
-            important.setChecked(subTask.isImportant);
+            isImportant.setChecked(subTask.isImportant);
             middleUpdate = false;
-
         }
     }
 }

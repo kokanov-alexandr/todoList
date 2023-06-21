@@ -27,5 +27,4 @@ public interface SubTaskDao {
 
     @Delete
     void delete(SubTask subTask);
-
 }

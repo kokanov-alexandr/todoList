@@ -7,6 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import java.util.Objects;
+
 @Entity
 public class SubTask implements Parcelable {
     @PrimaryKey(autoGenerate = true)
@@ -17,12 +20,12 @@ public class SubTask implements Parcelable {
 
     @ColumnInfo(name = "creationTime")
     public long creationTime;
-
     @ColumnInfo(name = "isDone")
-    public boolean isDone;
+    public boolean isCompleted;
 
     @ColumnInfo(name = "isImportant")
     public boolean isImportant;
+
 
     @ColumnInfo(name = "listId")
     public int listId;
@@ -32,7 +35,7 @@ public class SubTask implements Parcelable {
         id = in.readInt();
         text = in.readString();
         creationTime = in.readLong();
-        isDone = in.readByte() != 0;
+        isCompleted = in.readByte() != 0;
         isImportant = in.readByte() != 0;
     }
 
@@ -57,7 +60,20 @@ public class SubTask implements Parcelable {
         dest.writeInt(id);
         dest.writeString(text);
         dest.writeLong(creationTime);
-        dest.writeByte((byte) (isDone ? 1 : 0));
+        dest.writeByte((byte) (isCompleted ? 1 : 0));
         dest.writeByte((byte) (isImportant ? 1 : 0));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SubTask subTask = (SubTask) o;
+        return id == subTask.id && creationTime == subTask.creationTime && isCompleted == subTask.isCompleted && isImportant == subTask.isImportant && listId == subTask.listId && Objects.equals(text, subTask.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, text, creationTime, isCompleted, isImportant, listId);
     }
 }
