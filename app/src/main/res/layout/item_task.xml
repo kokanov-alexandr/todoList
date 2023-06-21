@@ -40,6 +40,7 @@
         android:foregroundGravity="center_vertical"
         android:scaleX="0.8"
         android:scaleY="0.8"
+        android:theme="@style/Theme.TodoList.AppBarOverlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
