@@ -3,7 +3,6 @@ package com.example.todolist.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -12,6 +11,7 @@ import java.util.Objects;
 
 @Entity
 public class Task implements Parcelable {
+
     @PrimaryKey(autoGenerate = true)
     public int id;
 
@@ -21,23 +21,12 @@ public class Task implements Parcelable {
     @ColumnInfo(name = "creationTime")
     public long creationTime;
 
-    @ColumnInfo(name = "isDone")
-    public boolean isDone;
-
-    @ColumnInfo(name = "isImportant")
-    public boolean isImportant;
-
-
-    public Task() {
-
-    }
+    public Task() {}
 
     protected Task(Parcel in) {
         id = in.readInt();
         text = in.readString();
         creationTime = in.readLong();
-        isDone = in.readByte() != 0;
-        isImportant = in.readByte() != 0;
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -55,16 +44,15 @@ public class Task implements Parcelable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return id == task.id && creationTime == task.creationTime && isDone == task.isDone && isImportant == task.isImportant && Objects.equals(text, task.text);
+        if (!(o instanceof Task)) return false;
+        Task listTask = (Task) o;
+        return id == listTask.id && creationTime == listTask.creationTime && Objects.equals(text, listTask.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, creationTime, isDone);
+        return Objects.hash(id, text, creationTime);
     }
-
 
     @Override
     public int describeContents() {
@@ -72,11 +60,9 @@ public class Task implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(text);
-        dest.writeLong(creationTime);
-        dest.writeByte((byte) (isDone ? 1 : 0));
-        dest.writeByte((byte) (isImportant ? 1 : 0));
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(text);
+        parcel.writeLong(creationTime);
     }
 }

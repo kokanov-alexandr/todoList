@@ -11,48 +11,61 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todolist.R;
-import com.example.todolist.databinding.ActivityMainBinding;
 import com.example.todolist.models.Task;
 import com.example.todolist.presentation.details.TaskDetailsActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
 
-    private ActivityMainBinding binding;
+    private RecyclerView recyclerView;
+    private TaskAdapter taskAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_tasks);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        initTaskAdapter();
+        initRecyclerView();
+        initFloatingActionButton();
+        initMainViewModel();
+    }
 
-        Adapter adapter = new Adapter();
 
-        recyclerView = findViewById(R.id.list);
+    private void initTaskAdapter() {
+        taskAdapter = new TaskAdapter();
+    }
+
+    private void initRecyclerView() {
+        recyclerView = findViewById(R.id.mainLists);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(taskAdapter);
+    }
 
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+    private void initFloatingActionButton() {
+        FloatingActionButton fab = findViewById(R.id.task_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TaskDetailsActivity.start(MainActivity.this, null);
             }
         });
+    }
 
+    private void initMainViewModel() {
         MainViewModel mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mainViewModel.getNoteLiveData().observe(this, new Observer<List<Task>>() {
+        mainViewModel.getListLiveData().observe(this, new Observer<List<Task>>() {
             @Override
-            public void onChanged(List<Task> tasks) {
-                adapter.setItems(tasks);
+            public void onChanged(List<Task> lists) {
+                taskAdapter.notifyDataSetChanged();
+                taskAdapter.setItems(lists);
             }
         });
     }
-
 }

@@ -24,9 +24,10 @@ public class SubTask implements Parcelable {
     @ColumnInfo(name = "isImportant")
     public boolean isImportant;
 
-    public SubTask() {
+    @ColumnInfo(name = "listId")
+    public int listId;
 
-    }
+    public SubTask() {}
     protected SubTask(Parcel in) {
         id = in.readInt();
         text = in.readString();

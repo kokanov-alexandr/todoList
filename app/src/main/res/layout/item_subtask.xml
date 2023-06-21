@@ -10,48 +10,54 @@
     android:gravity="center">
 
     <TextView
-        android:id="@+id/task_text"
-        android:layout_width="0dp"
+        android:id="@+id/subTaskText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:minHeight="64dp"
+        android:maxWidth="190dp"
         android:gravity="center_vertical"
-        android:text="Hello, world!"
-        android:layout_centerInParent="true"
-        tools:ignore="MissingConstraints"/>
+        tools:text = "Hello, world!"
+        tools:ignore="MissingConstraints" />
 
     <CheckBox
-        android:id="@+id/isCompleted"
+        android:id="@+id/subTaskIsImportant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/delete"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginEnd="4dp"
+        android:button="@android:drawable/star_big_off"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
+        android:foregroundGravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <CheckBox
-        android:id="@+id/isImportant"
+        android:id="@+id/subTaskIsCompleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:button="@android:drawable/star_big_off"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="88dp"
+        android:foregroundGravity="center_vertical"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <ImageView
-        android:id="@+id/delete"
+        android:id="@+id/subTaskdelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="56dp"
+        android:foregroundGravity="center_vertical"
         android:scaleX="0.9"
         android:scaleY="0.9"
         android:src="@android:drawable/ic_delete"
-        app:layout_constraintEnd_toStartOf="@+id/isImportant"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

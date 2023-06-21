@@ -1,5 +1,6 @@
 package com.example.todolist.data;
 
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -14,13 +15,11 @@ import java.util.List;
 
 @Dao
 public interface SubTaskDao {
+
     @Query("SELECT * FROM SubTask")
     LiveData<List<SubTask>> getAll();
 
-    @Query("SELECT * FROM task WHERE id = :id")
-    SubTask findByIdTask(int id);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insert(SubTask subTask);
 
     @Update
@@ -28,4 +27,5 @@ public interface SubTaskDao {
 
     @Delete
     void delete(SubTask subTask);
+
 }

@@ -15,16 +15,15 @@
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.TodoList.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.todolist.presentation.details.TaskDetailsActivity"
-            android:theme="@style/Theme.TodoList.NoActionBar"/>
-        <activity android:name="com.example.todolist.presentation.details.SubTaskDetailsActivity" />
+        <activity android:name="com.example.todolist.presentation.details.SubTaskDetailsActivity"
+            />
+        <activity android:name="com.example.todolist.presentation.details.TaskDetailsActivity" />
     </application>
 
 </manifest>

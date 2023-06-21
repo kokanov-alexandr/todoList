@@ -15,22 +15,18 @@ import androidx.recyclerview.widget.SortedList;
 
 import com.example.todolist.App;
 import com.example.todolist.R;
-import com.example.todolist.models.Task;
-import com.example.todolist.presentation.details.TaskDetailsActivity;
+import com.example.todolist.models.SubTask;
+import com.example.todolist.presentation.details.SubTaskDetailsActivity;
 
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
+public class SubTaskAdapter extends RecyclerView.Adapter<SubTaskAdapter.TaskViewHolder> {
+    private SortedList<SubTask> sortedList;
 
-    private SortedList<Task> sortedList;
-
-    public Adapter() {
-        InitSortedList();
-    }
-    private void InitSortedList() {
-        this.sortedList = new SortedList<Task>(Task.class, new SortedList.Callback<Task>() {
+    public SubTaskAdapter() {
+        sortedList = new SortedList<>(SubTask.class, new SortedList.Callback<SubTask>() {
             @Override
-            public int compare(Task o1, Task o2) {
+            public int compare(SubTask o1, SubTask o2) {
                 if (!o2.isImportant && o1.isImportant){
                     return -1;
                 }
@@ -38,7 +34,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
                     return 1;
                 }
                 if (!o2.isDone && o1.isDone) {
-                        return 1;
+                    return 1;
                 }
                 if (o2.isDone && !o1.isDone) {
                     return -1;
@@ -52,12 +48,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
             }
 
             @Override
-            public boolean areContentsTheSame(Task oldItem, Task newItem) {
+            public boolean areContentsTheSame(SubTask oldItem, SubTask newItem) {
                 return oldItem.equals(newItem);
             }
 
             @Override
-            public boolean areItemsTheSame(Task item1, Task item2) {
+            public boolean areItemsTheSame(SubTask item1, SubTask item2) {
                 return item1.id == item2.id;
             }
 
@@ -77,17 +73,18 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
             }
         });
     }
+
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new TaskViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task_list, parent, false));
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.item_subtask, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        holder.bindIsDone(sortedList.get(position));
-        holder.bindIsImportant(sortedList.get(position));
+        holder.bindDone(sortedList.get(position));
+        holder.bindImportant(sortedList.get(position));
     }
 
     @Override
@@ -95,84 +92,87 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TaskViewHolder> {
         return sortedList.size();
     }
 
-    public void setItems(List<Task> tasks) {
-        sortedList.replaceAll(tasks);
+    public void setItems(List<SubTask> subTasks) {
+        sortedList.replaceAll(subTasks);
     }
-
     static class TaskViewHolder extends RecyclerView.ViewHolder {
+
         TextView taskText;
-        CheckBox isCompleted;
+        CheckBox done;
         View delete;
-        CheckBox isImportant;
+        CheckBox important;
+        SubTask subTask;
+        boolean middleUpdate;
 
-        Task task;
-        boolean silentUpdate;
-
-        public TaskViewHolder(@NonNull View itemView) {
+        public TaskViewHolder(@NonNull final View itemView) {
             super(itemView);
-            taskText = itemView.findViewById(R.id.task_text);
-            isCompleted = itemView.findViewById(R.id.isCompleted);
-            delete = itemView.findViewById(R.id.delete);
-            isImportant = itemView.findViewById(R.id.isImportant);
+
+            taskText = itemView.findViewById(R.id.subTaskText);
+            done = itemView.findViewById(R.id.subTaskIsCompleted);
+            delete = itemView.findViewById(R.id.subTaskdelete);
+            important = itemView.findViewById(R.id.subTaskIsImportant);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    TaskDetailsActivity.start((Activity)itemView.getContext(), task);
+                public void onClick(View view) {
+                    SubTaskDetailsActivity.start((Activity) itemView.getContext(), subTask, subTask.listId);
                 }
             });
+
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    App.getInstance().getTaskDao().delete(task);
+                public void onClick(View view) {
+                    App.getInstance().getSubTaskDao().delete(subTask);
                 }
             });
 
-            isCompleted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean checked) {
-                    if (!silentUpdate) {
-                        task.isDone = checked;
-                        App.getInstance().getTaskDao().update(task);
-                    }
-                    updateStrokeOut();
-                }
-            });
-
-            isImportant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            important.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean choose) {
-                    if(!silentUpdate){
-                        task.isImportant = choose;
-                        App.getInstance().getTaskDao().update(task);
+                    if(!middleUpdate){
+                        subTask.isImportant = choose;
+                        App.getInstance().getSubTaskDao().update(subTask);
                     }
+                }
+            });
+
+            done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                    if (!middleUpdate) {
+                        subTask.isDone = checked;
+                        App.getInstance().getSubTaskDao().update(subTask);
+                    }
+                    crossOutTask();
                 }
             });
         }
 
-        public void bindIsDone(Task task) {
-            this.task = task;
-            taskText.setText(task.text);
-            updateStrokeOut();
-            silentUpdate = true;
-            isCompleted.setChecked(task.isDone);
-            silentUpdate = false;
-        }
-        public void bindIsImportant(Task task) {
-            this.task = task;
-            silentUpdate = true;
-            isImportant.setChecked(task.isImportant);
-            silentUpdate = false;
+        public void bindDone(SubTask subTask) {
+            this.subTask = subTask;
+            taskText.setText(subTask.text);
+            crossOutTask();
+            middleUpdate = true;
+            done.setChecked(subTask.isDone);
+            middleUpdate = false;
         }
 
-        private void updateStrokeOut() {
-            if (task.isDone) {
+        private void crossOutTask(){
+            if(subTask.isDone){
                 taskText.setPaintFlags(taskText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-            else {
+            } else {
                 taskText.setPaintFlags(taskText.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+
             }
         }
+        public void bindImportant(SubTask subTask) {
+            this.subTask = subTask;
 
+
+            middleUpdate = true;
+            important.setChecked(subTask.isImportant);
+            middleUpdate = false;
+
+        }
     }
 }
